@@ -86,19 +86,19 @@
 
     <!-- Main content -->
     <main class="z-10 w-full max-w-2xl mx-auto text-center animate-fade-in darkreader-ignore">
-        <!-- Logo -->
-        <div class="mb-12 relative">
-            <h1 class="text-6xl md:text-7xl font-gothic text-purple-500 mb-2 tracking-wider relative">
-                <span class="relative">
-                    GOTHIC<span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-purple-600">SEARCH</span>
-                    <span class="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-purple-900 via-purple-500 to-purple-900 opacity-70"></span>
-</span>
-            </h1>
-            <div class="relative mt-6">
-                <p class="text-lg tracking-wider text-gothic-400 px-4 py-1 inline-block shadow-lg">
-                    The Dark Side of the Web
-                </p>
-            </div>
+       <!-- Logo -->
+<div class="mb-12 relative">
+    <h1 class="text-6xl md:text-7xl font-gothic text-purple-500 mb-2 tracking-wider relative whitespace-nowrap">
+        <span class="relative">
+            GOTHIC<span class="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-purple-600"> SEARCH</span>
+            <span class="absolute -bottom-2 left-0 w-full h-1 bg-gradient-to-r from-purple-900 via-purple-500 to-purple-900 opacity-70"></span>
+        </span>
+    </h1>
+    <div class="relative mt-6">
+        <p class="text-lg tracking-wider text-gothic-400 px-4 py-1 inline-block shadow-lg">
+            The Dark Side of the Web
+        </p>
+    </div>
 </div>
         <!-- Search form -->
         <form id="searchForm" class="mb-8 darkreader-ignore relative">
@@ -243,78 +243,80 @@
         });
     </script>
 <script>
-        feather.replace();
+    feather.replace();
 
-        // Random placeholder text
-        const placeholderTexts = [
-            "Seek forbidden knowledge...",
-            "What haunts your mind?...", 
-            "Dare to search...", 
-            "Unearth the dark web...", 
-            "Query the abyss...", 
-            "Whisper your desire...", 
-            "Summon the answers...", 
-            "What do you fear to know?..."
-        ];
-        document.getElementById('searchInput').placeholder = 
-            placeholderTexts[Math.floor(Math.random() * placeholderTexts.length)];
+    // Random placeholder text
+    const placeholderTexts = [
+        "Seek forbidden knowledge...",
+        "What haunts your mind?...", 
+        "Dare to search...", 
+        "Unearth the dark web...", 
+        "Query the abyss...", 
+        "Whisper your desire...", 
+        "Summon the answers...", 
+        "What do you fear to know?..."
+    ];
+    document.getElementById('searchInput').placeholder = 
+        placeholderTexts[Math.floor(Math.random() * placeholderTexts.length)];
 
-        // Show goth images when "goth" is typed
-        let typedKeys = '';
-        document.addEventListener('keydown', (e) => {
-            typedKeys += e.key.toLowerCase();
-            if (typedKeys.length > 4) typedKeys = typedKeys.slice(-4);
-            if (typedKeys === 'goth') {
-                document.getElementById('gothImages').classList.remove('hidden');
-                setTimeout(() => {
-                    document.getElementById('gothImages').classList.add('hidden');
-                    typedKeys = '';
-                }, 5000);
+    // Show goth images when "goth" is typed
+    let typedKeys = '';
+    document.addEventListener('keydown', (e) => {
+        typedKeys += e.key.toLowerCase();
+        if (typedKeys.length > 4) typedKeys = typedKeys.slice(-4);
+        if (typedKeys === 'goth') {
+            document.getElementById('gothImages').classList.remove('hidden');
+            setTimeout(() => {
+                document.getElementById('gothImages').classList.add('hidden');
+                typedKeys = '';
+            }, 5000);
+        }
+    });
+
+    // Initialize search history
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchForm = document.getElementById('searchForm');
+        const searchInput = document.getElementById('searchInput');
+        const searchHistory = document.getElementById('searchHistory');
+        const historyItems = document.getElementById('historyItems');
+        
+        let searches = JSON.parse(localStorage.getItem('gothicSearches')) || [];
+        if(searches.length > 0) searchHistory.classList.remove('hidden');
+
+        searchForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const query = searchInput.value.trim();
+            if(query) {
+                searches = searches.filter(item => item !== query);
+                searches.unshift(query);
+                searches = searches.slice(0, 5);
+                localStorage.setItem('gothicSearches', JSON.stringify(searches));
+                searchHistory.classList.remove('hidden');
+                updateHistoryDisplay();
+                performSearch(query);
             }
         });
 
-        // Initialize search history
-        document.addEventListener('DOMContentLoaded', function() {
-            const searchForm = document.getElementById('searchForm');
-            const searchInput = document.getElementById('searchInput');
-            const searchHistory = document.getElementById('searchHistory');
-            const historyItems = document.getElementById('historyItems');
-            
-            let searches = JSON.parse(localStorage.getItem('gothicSearches')) || [];
-            if(searches.length > 0) searchHistory.classList.remove('hidden');
-
-            searchForm.addEventListener('submit', function(e) {
-                e.preventDefault();
-                const query = searchInput.value.trim();
-                if(query) {
-                    searches = searches.filter(item => item !== query);
-                    searches.unshift(query);
-                    searches = searches.slice(0, 5);
-                    localStorage.setItem('gothicSearches', JSON.stringify(searches));
-                    searchHistory.classList.remove('hidden');
-                    updateHistoryDisplay();
+        function updateHistoryDisplay() {
+            historyItems.innerHTML = '';
+            searches.forEach(query => {
+                const item = document.createElement('button');
+                item.textContent = query;
+                item.className = 'px-4 py-2 bg-gothic-700 hover:bg-purple-900 text-purple-300 hover:text-white rounded-full text-base font-bold transition-all duration-300 cursor-pointer border border-purple-800/50 shadow-md shadow-purple-900/20 darkreader-ignore';
+                item.addEventListener('click', function() {
+                    searchInput.value = query;
                     performSearch(query);
-                }
-            });
-
-            function updateHistoryDisplay() {
-                historyItems.innerHTML = '';
-                searches.forEach(query => {
-                    const item = document.createElement('button');
-                    item.textContent = query;
-                    item.className = 'px-4 py-2 bg-gothic-700 hover:bg-purple-900 text-purple-300 hover:text-white rounded-full text-base font-bold transition-all duration-300 cursor-pointer border border-purple-800/50 shadow-md shadow-purple-900/20 darkreader-ignore';
-                    item.addEventListener('click', function() {
-                        searchInput.value = query;
-                        performSearch(query);
-                    });
-                    historyItems.appendChild(item);
                 });
-            }
+                historyItems.appendChild(item);
+            });
+        }
 
-            function performSearch(query) {
-                window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
-            }
-        });
-    </script>
+        function performSearch(query) {
+            window.location.href = `https://www.google.com/search?q=${encodeURIComponent(query)}`;
+        }
+
+        updateHistoryDisplay();
+    });
+</script>
 </body>
 </html>
